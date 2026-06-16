@@ -1246,7 +1246,7 @@
     var moved = false;
 
     el.addEventListener('pointerdown', function (e) {
-      e.preventDefault();
+      if (e.button !== 0) return;
       moved = false;
       S.dragging = false;
       startX = e.clientX;
@@ -1851,19 +1851,30 @@
           // 窗口resize时确保不超出屏幕
           window.addEventListener('resize', onWindowResize);
 
-          // App容器显示设置入口
+          // App容器显示设置入口 + 关闭按钮
           container.innerHTML = '<div class="roche-plugin-phone-app" style="padding:20px;font-family:-apple-system,BlinkMacSystemFont,sans-serif">'
-            + '<h2 style="font-size:20px;font-weight:700;margin-bottom:16px">小手机设置</h2>'
+            + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">'
+            + '<h2 style="font-size:20px;font-weight:700;margin:0">小手机</h2>'
+            + '<button id="roche-phone-app-close" style="padding:8px 20px;border-radius:999px;border:1px solid #e4e4e7;background:#fff;color:#18181b;font-size:14px;font-weight:600;cursor:pointer">关闭</button>'
+            + '</div>'
             + '<p style="color:#71717a;font-size:14px;line-height:1.6;margin-bottom:12px">'
             + '小手机插件已在运行。点击屏幕上的悬浮球即可打开聊天界面。'
             + '</p>'
             + '<p style="color:#71717a;font-size:13px;line-height:1.5">'
-            + '• 双击顶栏角色名可切换角色<br>'
+            + '• 点击顶栏角色名可切换角色<br>'
             + '• Enter 发送仅同步到线上<br>'
             + '• 发送键 同时触发线下回复<br>'
             + '• 悬浮球可拖拽，位置自动保存'
             + '</p>'
             + '</div>';
+
+          // 关闭按钮
+          var closeAppBtn = container.querySelector('#roche-phone-app-close');
+          if (closeAppBtn) {
+            closeAppBtn.addEventListener('click', function () {
+              roche.ui.closeApp();
+            });
+          }
 
           console.log('[小手机] 插件已加载 v1.0.0');
         },
